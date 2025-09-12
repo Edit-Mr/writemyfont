@@ -1167,7 +1167,7 @@ $(document).ready(async function () {
     $("#justwriteNOWButton").on("click", async function () {
         await sendRightNOW();
     });
-
+  
     // 顯示設定畫面
     $("#settingButton").on("click", async function () {
         $("#settings-title").text(settings.notNewFlag ? fdrawer.settingsTitle : fdrawer.welcomeTitle);
