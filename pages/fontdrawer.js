@@ -408,6 +408,10 @@ $(document).ready(async function () {
                 if ($("#ads-container")) $("#ads-container").show();
             }
             $("#spanDoneCount").text(await countGlyphFromDB());
+
+            // 如果 URL 參數中有 export=true，則自動開始匯出
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get("export") === "true") await sendRightNOW();
         })
         .catch(error => {
             console.error("IndexedDB 起動失敗", error);
@@ -1122,35 +1126,45 @@ $(document).ready(async function () {
         $progressContainer.hide();
     });
 
-    $("#justwriteNOWButton").on("click", async function () {
+    const sendRightNOW = async () => {
         const font = await loadWriting();
         const buffer = font.toArrayBuffer();
-
-        console.log("Font buffer:", buffer);
-        console.log("Buffer type:", typeof buffer);
-        console.log("Is ArrayBuffer:", buffer instanceof ArrayBuffer);
-
-        const host = "https://justwritenow.zeabur.app";
-
-        const popup = window.open(`${host}/upload?source=But`, "_blank");
-
+        const host = "https://justwritenow.zeabur.app"; //"http://localhost:8080";
+        const popup = window.open(`${host}/upload?send=But`, "_blank");
+        if (!popup) {
+            alert(fdrawer.exportConfirmMsg);
+            return;
+        } else {
+            console.log("popup 建立成功");
+        }
         window.addEventListener("message", event => {
             console.log("Parent received message from:", event.origin, "data:", event.data);
-
             if (event.origin !== host) {
                 console.log("Origin mismatch, expected", host);
                 return;
             }
-
             if (event.data === "ready") {
-                console.log("Received ready signal, sending buffer to popup:", buffer);
-                // Send the font buffer without transferable objects
-                popup.postMessage({ buffer }, "http://localhost:4321");
+                console.log("Received ready signal, sending buffer to popup");
+
+                // Convert to base64
+                const uint8Array = new Uint8Array(buffer);
+                const base64String = btoa(String.fromCharCode.apply(null, Array.from(uint8Array)));
+
+                popup.postMessage(
+                    {
+                        bufferBase64: base64String,
+                        byteLength: buffer.byteLength,
+                    },
+                    event.origin
+                );
             }
         });
-
         $naviContainer.show();
         $progressContainer.hide();
+    };
+
+    $("#justwriteNOWButton").on("click", async function () {
+        await sendRightNOW();
     });
 
     // 顯示設定畫面
