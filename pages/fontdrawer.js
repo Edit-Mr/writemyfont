@@ -1241,6 +1241,8 @@ $(document).ready(async function () {
 	// 關閉匯出至手寫誌畫面
 	$('#closeJustWriteNOWButton').on('click', function () {
         $('#justwritenow-container').hide();
+        $naviContainer.show();
+        $progressContainer.hide();
     });
 	
 
