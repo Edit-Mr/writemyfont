@@ -156,6 +156,7 @@
 			<label for="saveAsTester">測試輸出</label>
 			<span class="note">勾選測試輸出，字型名稱會加上流水號。避免系統快取造成在電腦上無法正常安裝使用的問題。</span>
 			<button id="downloadFontButton">下載字型OTF檔案</button><br>
+			<button id="justwriteNOWButton">傳送到手寫誌</button>
 			<h3>斗內作者</h3>
 			字型檔的權利均屬於您個人，不過如果您喜歡這個工具，請<a href="https://p.ecpay.com.tw/930AED7" target="_blank">考慮斗內支持作者的開發工作</a>。您的支持將有助於未來的更新和改進！
 			<br />
@@ -168,6 +169,15 @@
 			<button id="exportDataButton">備份工作中的字型資料</button>
 			<br />
 			<p class="dummy"></p>
+		</div>
+	</div>
+
+	<div id="justwritenow-container" class="dialog">
+		<div class="dialog-body">
+			<span id="closeJustWriteNOWButton" class="close">×</span>
+			<h2 id="justwritenow-title">正在傳送至手寫誌</h2>
+			<p id="justwritenow-status">處理中...</p>
+			<button id="justwriteNOWConfirmButton" disabled>傳送到手寫誌</button>
 		</div>
 	</div>
 
@@ -202,7 +212,10 @@
 			welcomeTitle: '歡迎使用手寫字型產生器！',
 			settingsTitle: '字型設定',
 			inAppNotice: '請使用裝置瀏覽器開啟以獲得最佳使用體驗。',
-			customList: '使用者字表'
+			customList: '使用者字表',
+			exportPreparingMsg: "正在準備資料，請稍候...",
+			exportFailedMsg: "傳送至手寫誌失敗，請允許彈出視窗後重新點擊匯出。",
+			exportReadyMsg: "準備好了！請點擊下方按鈕前往手寫誌。",
 		};
 	</script>
 

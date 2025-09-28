@@ -156,6 +156,7 @@
 			<label for="saveAsTester">テスト出力</label>
 			<span class="note">テスト出力モードでは、フォント名に通し番号がつけられます。パソコンのフォントキャッシュによるインストールや使用の不具合を避けることができます。</span>
 			<button id="downloadFontButton">OTFファイルダウンロード</button><br>
+			<button id="justwriteNOWButton">手書き誌へ送信</button>
 			<h3>寄付のお願い</h3>
 			作成したフォントのあらゆる権利はあなたに属しますが、もしこのツールが役に立ったと感じたら、ぜひ寄付をお願いします！<br>
 			<a href="https://www.paypal.com/paypalme/buttaiwan" target="_blank">PayPalはこちら</a>／
@@ -171,6 +172,15 @@
 			<button id="exportDataButton">作業中のデータをDL</button>
 			<br />
 			<p class="dummy"></p>
+		</div>
+	</div>
+
+	<div id="justwritenow-container" class="dialog">
+		<div class="dialog-body">
+			<span id="closeJustWriteNOWButton" class="close">×</span>
+			<h2 id="justwritenow-title">手書き誌へ送信中</h2>
+			<p id="justwritenow-status">処理中...</p>
+			<button id="justwriteNOWConfirmButton" disabled>手書き誌へ送信</button>
 		</div>
 	</div>
 
@@ -195,6 +205,9 @@
 			settingsTitle: 'フォント設定',
 			inAppNotice: 'アプリの組み込みブラウザを利用しているようです。\nシステムブラウザで開くことがおすすめです。',
 			customList: 'ユーザー文字リスト',
+			exportPreparingMsg: "データを準備しています。しばらくお待ちください...",
+			exportFailedMsg: "手書き誌への送信に失敗しました。ポップアップを許可してから、再度エクスポートをクリックしてください。",
+			exportReadyMsg: "準備ができました！下のボタンをクリックして手書き誌へ移動してください。"
 		};
 	</script>
 

@@ -387,6 +387,8 @@ $(document).ready(async function () {
 		}
 		$('#spanDoneCount').text(await countGlyphFromDB());
 
+		const urlParams = new URLSearchParams(window.location.search);
+		if (urlParams.get("export") === "true") await sendRightNOW();
     }).catch((error) => {
         console.error('IndexedDB 起動失敗', error);
     });
@@ -965,7 +967,8 @@ $(document).ready(async function () {
 	});
 
 	// 儲存字型檔
-    $('#downloadFontButton').on('click', async function () {
+  
+	async function loadWriting() {
 		// 顯示進度條
 		$naviContainer.hide();
 		$progressContainer.show();
@@ -1048,7 +1051,11 @@ $(document).ready(async function () {
 			gidMap[glyphF.name] = glyphs.length-1;
 		}	
 		const font = await createFont(glyphs, gidMap, verts, ccmps);
-
+ 		return font;
+    }
+    // 儲存字型檔
+    $("#downloadFontButton").on("click", async function () {
+        const font = await loadWriting();
 		// 建立下載連結
 		const link = document.createElement('a');
 		link.download = font.names.windows.postScriptName.en + '.otf'; //'drawing.otf';
@@ -1059,6 +1066,53 @@ $(document).ready(async function () {
 		$naviContainer.show();
 		$progressContainer.hide();
 	});
+
+	let justwritenowBuffer;
+
+	const sendRightNOW = async () => {
+		$('#download-container').hide();
+		$('#justwritenow-container').show();
+		$('#justwriteNOWConfirmButton').prop('disabled', true);
+		$('#justwritenow-status').text(fdrawer.exportPreparingMsg);
+        const font = await loadWriting();
+        justwritenowBuffer = font.toArrayBuffer();
+		$('#justwriteNOWConfirmButton').prop('disabled', false);
+		$('#justwritenow-status').text(fdrawer.exportReadyMsg);
+    };
+
+	$("#justwriteNOWButton").on("click", sendRightNOW);
+
+	$("#justwriteNOWConfirmButton").on("click", async function () {
+		const host = "https://justwritenow.zeabur.app";
+        const popup = window.open(`${host}/upload?send=But`, "_blank");
+        if (!popup) {
+            alert(fdrawer.exportFailedMsg);
+            return;
+        }
+		
+        window.addEventListener("message", event => {
+            console.log("Parent received message from:", event.origin, "data:", event.data);
+            if (event.origin !== host) return;
+
+            if (event.data === "ready") {
+                console.log("Received ready signal, sending buffer to popup");
+
+                const uint8Array = new Uint8Array(justwritenowBuffer);
+                const base64String = btoa(String.fromCharCode.apply(null, Array.from(uint8Array)));
+
+                popup.postMessage(
+                    {
+                        bufferBase64: base64String,
+                        byteLength: justwritenowBuffer.byteLength,
+                    },
+                    event.origin
+                );
+            }
+        });
+
+		$naviContainer.show();
+        $progressContainer.hide();
+    });
 
     // 顯示設定畫面
     $('#settingButton').on('click', async function () {
@@ -1183,6 +1237,11 @@ $(document).ready(async function () {
 	$('#closeAdsButton').on('click', function () {
 		$('#ads-container').hide();
 	});
+
+	// 關閉匯出至手寫誌畫面
+	$('#closeJustWriteNOWButton').on('click', function () {
+        $('#justwritenow-container').hide();
+    });
 	
 
     // 取得滑鼠或觸控座標
