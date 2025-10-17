@@ -1083,7 +1083,7 @@ $(document).ready(async function () {
 	$("#justwriteNOWButton").on("click", sendRightNOW);
 
 	$("#justwriteNOWConfirmButton").on("click", async function () {
-		const host = "https://justwritenow.zeabur.app";
+		const host = "https://handwriting.justfont.com";
         const popup = window.open(`${host}/upload?send=But`, "_blank");
         if (!popup) {
             alert(fdrawer.exportFailedMsg);
